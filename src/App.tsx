@@ -82,13 +82,36 @@ function App() {
       }
     };
 
+    const handleTouchMove = (e: any) => {
+      const touchY = e.touches[0].clientY;
+      const deltaY = touchStartY - touchY;
+      
+      const scrollContainer = (e.target as any).closest('.overflow-auto');
+      if (scrollContainer) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
+        // If at top and trying to scroll up, prevent default to block pull-to-refresh
+        if (scrollTop <= 2 && deltaY < 0) {
+          if (e.cancelable) e.preventDefault();
+        }
+        // If at bottom and trying to scroll down, prevent default to block bounce
+        if (Math.ceil(scrollTop + clientHeight) >= scrollHeight - 2 && deltaY > 0) {
+          if (e.cancelable) e.preventDefault();
+        }
+      } else {
+        // If the element is not scrollable, prevent all movement to block browser refresh
+        if (e.cancelable) e.preventDefault();
+      }
+    };
+
     window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
     window.addEventListener('touchend', handleTouchEnd, { passive: true });
     
     return () => {
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [activeSection, totalSections]);
