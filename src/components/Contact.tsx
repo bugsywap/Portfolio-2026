@@ -4,13 +4,13 @@ import { ArrowUpRight, Mail, Globe, MessageSquare, User, Sparkles, Video, Briefc
 
 const Contact = () => {
   return (
-    <div className="relative w-full h-full pb-12 bg-white text-black font-['Outfit'] flex flex-col items-center">
+    <div className="relative w-full min-h-full pb-24 bg-white text-black font-['Outfit'] flex flex-col items-center">
        <div className="absolute inset-x-12 md:inset-x-[4rem] top-12 md:top-[3rem] h-px bg-black/10 z-30" />
 
       {/* Extreme Contrast BG blob */}
       <div className="absolute right-[5%] bottom-[10%] -z-10 bg-purple-500/10 w-[500px] h-[500px] blur-[150px] rounded-full" />
 
-      <div className="relative z-20 h-full w-full flex items-center justify-center p-8 md:px-[4rem]">
+      <div className="relative z-20 w-full flex flex-col items-center justify-start p-8 md:px-[4rem] pt-16 lg:pt-24">
         <div className="max-w-[1500px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           
           {/* Left: Huge Headers */}

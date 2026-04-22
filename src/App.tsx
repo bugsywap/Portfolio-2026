@@ -55,15 +55,21 @@ function App() {
       const touchEndY = e.changedTouches[0].clientY;
       const deltaY = touchStartY - touchEndY;
 
+      // Check if we are on a mobile device (roughly)
+      const isMobile = window.innerWidth < 768;
+      const threshold = isMobile ? 100 : 50; // Higher threshold for mobile to avoid accidental swipes
+
       // Ensure we're not inside an overflow container that's currently scrolling
       const scrollContainer = (e.target as any).closest('.overflow-auto');
       if (scrollContainer) {
         const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
+        // If scrolling down, wait until we hit the bottom
         if (deltaY > 0 && Math.ceil(scrollTop + clientHeight) < scrollHeight - 2) return;
+        // If scrolling up, wait until we hit the top
         if (deltaY < 0 && scrollTop > 2) return;
       }
 
-      if (Math.abs(deltaY) > 50) {
+      if (Math.abs(deltaY) > threshold) {
         if (deltaY > 0 && activeSection < totalSections - 1) {
           setDirection(1);
           isTransitioning.current = true;
@@ -205,7 +211,7 @@ function App() {
             onAnimationComplete={onAnimationComplete}
             className="absolute top-0 left-0 w-full h-full bg-background flex flex-col items-center justify-start overflow-auto pt-28"
           >
-            <About />
+            <div className="w-full min-h-full"><About /></div>
           </motion.div>
         )}
 
@@ -221,7 +227,7 @@ function App() {
             onAnimationComplete={onAnimationComplete}
             className="absolute top-0 left-0 w-full h-full bg-background flex flex-col items-center justify-start overflow-auto pt-28"
           >
-             <div className="w-full h-full"><Skills /></div>
+             <div className="w-full min-h-full"><Skills /></div>
           </motion.div>
         )}
 
@@ -237,7 +243,7 @@ function App() {
             onAnimationComplete={onAnimationComplete}
             className="absolute top-0 left-0 w-full h-full bg-background flex flex-col items-center justify-start overflow-auto pt-28"
           >
-            <div className="w-full h-full pb-16"><Projects /></div>
+            <div className="w-full min-h-full pb-16"><Projects /></div>
           </motion.div>
         )}
 
@@ -251,9 +257,9 @@ function App() {
             exit="exit"
             transition={{ duration: 0.8, ease: [0.65, 0, 0.35, 1] }}
             onAnimationComplete={onAnimationComplete}
-            className="absolute top-0 left-0 w-full h-full bg-background flex flex-col items-center justify-start overflow-hidden pt-28"
+            className="absolute top-0 left-0 w-full h-full bg-background flex flex-col items-center justify-start overflow-auto pt-28"
           >
-            <Contact />
+            <div className="w-full min-h-full"><Contact /></div>
           </motion.div>
         )}
 

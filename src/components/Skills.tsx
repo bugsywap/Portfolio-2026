@@ -92,7 +92,7 @@ const SkillBubble = ({ skill, index }: { skill: any, index: number }) => {
 
 const Skills = () => {
   return (
-    <div className="relative w-full h-full bg-white text-black font-['Outfit'] overflow-hidden">
+    <div className="relative w-full min-h-full bg-white text-black font-['Outfit']">
       {/* Background Grid Lines */}
        <div className="absolute inset-x-12 md:inset-x-[4rem] top-12 md:top-[3rem] h-px bg-black/10 z-0" />
        <div className="absolute inset-x-12 md:inset-x-[4rem] bottom-12 md:bottom-[3rem] h-px bg-black/10 z-0" />
@@ -100,7 +100,7 @@ const Skills = () => {
       {/* Background Decor Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-600/5 blur-[150px] rounded-full -z-10" />
 
-      <div className="relative z-20 w-full h-full flex flex-col pb-24 px-8 md:px-[4rem] pt-16 lg:pt-24">
+      <div className="relative z-20 w-full min-h-full flex flex-col pb-24 px-8 md:px-[4rem] pt-16 lg:pt-24">
         
         {/* Header Section */}
         <div className="max-w-[1300px] w-full mx-auto mb-20">
