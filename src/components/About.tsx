@@ -151,7 +151,7 @@ const About = () => {
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-6 pt-4">
                 <a 
-                  href="/Resume - Gabriel Ollero (Fixed).pdf"
+                  href="/Resume - Gabriel Ollero (New).pdf"
                   download
                   className="group relative inline-flex items-center justify-center gap-4 px-10 py-6 bg-black text-white rounded-full font-black text-xs uppercase tracking-[0.2em] overflow-hidden transition-all duration-300 active:scale-95 shadow-[8px_8px_0px_0px_rgba(147,51,234,0.3)] hover:shadow-none"
                   style={{ clipPath: 'polygon(0 0, 100% 0, 100% 75%, 90% 100%, 0 100%)' }}
