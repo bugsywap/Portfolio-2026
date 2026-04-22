@@ -200,23 +200,32 @@ const Projects = () => {
             
             {/* Desktop: Triple-Row Scroller */}
             <div className="hidden lg:flex flex-col space-y-4">
-              {[categoryLabels, [...categoryLabels].reverse(), categoryLabels].map((row, idx) => (
-                <div key={idx} className="flex overflow-hidden whitespace-nowrap border-y border-black/[0.03] py-8 hover:bg-zinc-50 transition-colors">
-                  <motion.div 
-                    animate={{ x: idx === 1 ? ["-50%", "0%"] : ["0%", "-50%"] }}
-                    transition={{ duration: 40 + idx * 10, repeat: Infinity, ease: "linear" }}
-                    className="flex gap-24 pr-24 items-center shrink-0"
-                  >
-                    {[...row, ...row, ...row].map((cat, i) => (
-                      <div key={i} onClick={() => setSelectedCategory(cat.id)} className="flex items-center gap-8 cursor-pointer group transition-transform hover:scale-105 font-['Outfit']">
-                        <cat.icon size={32} className="text-zinc-200 group-hover:text-purple-600 transition-colors" />
-                        <span className="text-[min(6vw,4.5rem)] font-black uppercase tracking-tighter group-hover:text-purple-600 transition-colors font-['Outfit']">{cat.label}</span>
-                        <div className="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all"><ArrowUpRight size={24} /></div>
-                      </div>
-                    ))}
-                  </motion.div>
-                </div>
-              ))}
+              {[0, 1, 2].map((rowIdx) => {
+                // Randomize each row independently for a more dynamic feel
+                const shuffledRow = [...categoryLabels].sort(() => (rowIdx + 1) * Math.random() - 0.5);
+                return (
+                  <div key={rowIdx} className="flex overflow-hidden whitespace-nowrap border-y border-black/[0.03] py-8 hover:bg-zinc-50 transition-colors">
+                    <motion.div 
+                      animate={{ x: rowIdx === 1 ? ["-50%", "0%"] : ["0%", "-50%"] }}
+                      transition={{ 
+                        duration: 60 + rowIdx * 5, // Standardized speed (slower and more consistent)
+                        repeat: Infinity, 
+                        ease: "linear" 
+                      }}
+                      className="flex gap-24 pr-24 items-center shrink-0"
+                    >
+                      {/* Using 2 repeats with -50% offset ensures a mathematically perfect seamless loop */}
+                      {[...shuffledRow, ...shuffledRow].map((cat, i) => (
+                        <div key={`${rowIdx}-${cat.id}-${i}`} onClick={() => setSelectedCategory(cat.id)} className="flex items-center gap-8 cursor-pointer group transition-transform hover:scale-105 font-['Outfit']">
+                          <cat.icon size={32} className="text-zinc-200 group-hover:text-purple-600 transition-colors" />
+                          <span className="text-[min(6vw,4.5rem)] font-black uppercase tracking-tighter group-hover:text-purple-600 transition-colors font-['Outfit']">{cat.label}</span>
+                          <div className="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all"><ArrowUpRight size={24} /></div>
+                        </div>
+                      ))}
+                    </motion.div>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Mobile/Tablet: Massive Vertical Brutalist Menu */}
