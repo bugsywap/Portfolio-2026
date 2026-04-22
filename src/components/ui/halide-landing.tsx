@@ -254,6 +254,44 @@ const HalideLanding: React.FC<HalideLandingProps> = ({ onViewProjects }) => {
           50% { transform: scaleY(1); transform-origin: top; }
           51% { transform: scaleY(1); transform-origin: bottom; }
         }
+
+        @media (max-width: 1023px) {
+          .interface-grid {
+            padding: 2rem 1.5rem !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            gap: 2.5rem;
+          }
+          .grid-header {
+            position: absolute;
+            top: 3rem;
+            left: 0;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0 1.5rem;
+          }
+          .grid-header > div:last-child {
+            text-align: center !important;
+          }
+          .grid-footer {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 1.5rem;
+          }
+          .cta-button {
+            padding: 0.8rem 1.8rem !important;
+            font-size: 0.7rem !important;
+          }
+          .hero-title {
+            align-items: center !important;
+            font-size: clamp(2.5rem, 12vw, 3.5rem) !important;
+            line-height: 0.9 !important;
+            margin: 0 !important;
+          }
+        }
       `}</style>
 
       <div className="halide-container">
