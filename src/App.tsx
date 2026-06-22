@@ -9,10 +9,100 @@ import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 
+// --- ROUTING UTILITIES ---
+const getRouteFromPath = (path: string) => {
+  const cleanPath = path.replace(/^\/|\/$/g, '').toLowerCase();
+
+  if (!cleanPath || cleanPath === 'home') {
+    return { activeSection: 0, selectedCategory: null };
+  }
+  if (cleanPath === 'about') {
+    return { activeSection: 1, selectedCategory: null };
+  }
+  if (cleanPath === 'skills') {
+    return { activeSection: 2, selectedCategory: null };
+  }
+  if (cleanPath === 'projects' || cleanPath === 'work') {
+    return { activeSection: 3, selectedCategory: null };
+  }
+  if (cleanPath === 'contact') {
+    return { activeSection: 4, selectedCategory: null };
+  }
+
+  // Project categories
+  if (cleanPath === 'websites') {
+    return { activeSection: 3, selectedCategory: 'websites' };
+  }
+  if (cleanPath === 'logos') {
+    return { activeSection: 3, selectedCategory: 'logos' };
+  }
+  if (cleanPath === 'aigens' || cleanPath === 'ai-gens' || cleanPath === 'ai') {
+    return { activeSection: 3, selectedCategory: 'aiGens' };
+  }
+  if (cleanPath === 'mascots') {
+    return { activeSection: 3, selectedCategory: 'mascots' };
+  }
+  if (cleanPath === 'flyers') {
+    return { activeSection: 3, selectedCategory: 'flyers' };
+  }
+  if (cleanPath === 'videos' || cleanPath === 'video') {
+    return { activeSection: 3, selectedCategory: 'videos' };
+  }
+
+  return { activeSection: 0, selectedCategory: null };
+};
+
+const getPathFromRoute = (activeSection: number, selectedCategory: string | null) => {
+  if (activeSection === 3 && selectedCategory) {
+    if (selectedCategory === 'aiGens') return '/ai-gens';
+    return `/${selectedCategory}`;
+  }
+  
+  switch (activeSection) {
+    case 0: return '/home';
+    case 1: return '/about';
+    case 2: return '/skills';
+    case 3: return '/projects';
+    case 4: return '/contact';
+    default: return '/home';
+  }
+};
+
 function App() {
-  const [activeSection, setActiveSection] = useState<number>(0);
+  const initialRoute = getRouteFromPath(window.location.pathname);
+  const [activeSection, setActiveSection] = useState<number>(initialRoute.activeSection);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(initialRoute.selectedCategory);
   const [direction, setDirection] = useState<number>(1); // 1 for forward/down, -1 for backward/up
   const isTransitioning = useRef(false);
+
+  // Sync state to URL path
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    const targetPath = getPathFromRoute(activeSection, selectedCategory);
+    
+    if (currentPath !== targetPath) {
+      window.history.pushState(null, '', targetPath);
+    }
+  }, [activeSection, selectedCategory]);
+
+  // Handle browser back/forward buttons (popstate)
+  useEffect(() => {
+    const handlePopState = () => {
+      const { activeSection: targetSection, selectedCategory: targetCategory } = getRouteFromPath(window.location.pathname);
+      setActiveSection(targetSection);
+      setSelectedCategory(targetCategory);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Reset selectedCategory when leaving the projects section (section 3)
+  useEffect(() => {
+    if (activeSection !== 3) {
+      setSelectedCategory(null);
+    }
+  }, [activeSection]);
 
   const totalSections = 5;
 
@@ -266,7 +356,12 @@ function App() {
             onAnimationComplete={onAnimationComplete}
             className="absolute top-0 left-0 w-full h-full bg-background flex flex-col items-center justify-start overflow-auto pt-28"
           >
-            <div className="w-full min-h-full pb-16"><Projects /></div>
+            <div className="w-full min-h-full pb-16">
+              <Projects 
+                selectedCategory={selectedCategory} 
+                setSelectedCategory={setSelectedCategory} 
+              />
+            </div>
           </motion.div>
         )}
 

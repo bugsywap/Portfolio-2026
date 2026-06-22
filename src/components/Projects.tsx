@@ -71,7 +71,7 @@ const categoryLabels = [
 
 // --- COMPONENTS ---
 
-const SecureVideoPlayer = ({ src }: { src: string }) => {
+const SecureVideoPlayer = ({ src, isContain = false }: { src: string; isContain?: boolean }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -102,7 +102,7 @@ const SecureVideoPlayer = ({ src }: { src: string }) => {
       <video
         ref={videoRef}
         src={src}
-        className="w-full h-full object-cover"
+        className={`w-full h-full ${isContain ? 'object-contain' : 'object-cover'}`}
         onTimeUpdate={handleTimeUpdate}
         playsInline
         autoPlay
@@ -173,8 +173,12 @@ const ShowcaseHeader = ({ title, icon: Icon, onBack }: any) => (
   </div>
 );
 
-const Projects = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+interface ProjectsProps {
+  selectedCategory: string | null;
+  setSelectedCategory: (cat: string | null) => void;
+}
+
+const Projects = ({ selectedCategory, setSelectedCategory }: ProjectsProps) => {
   const [expandedProject, setExpandedProject] = useState<any>(null);
 
   useEffect(() => {
@@ -300,10 +304,12 @@ const Projects = () => {
 
                   {/* Dynamic Video Preview for Reels */}
                   {selectedCategory === 'videos' ? (
-                    <div className="w-full h-full relative">
+                    <div className="w-full h-full relative bg-black">
                       <video 
                         src={item.videoSrc} 
-                        className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[2s]" 
+                        className={`w-full h-full scale-105 group-hover:scale-100 transition-transform duration-[2s] ${
+                          item.id === 'vid-10' ? 'object-contain' : 'object-cover'
+                        }`} 
                         muted 
                         loop 
                         playsInline
@@ -364,7 +370,7 @@ const Projects = () => {
 
                     {expandedProject.videoSrc ? (
                         <div className="h-full w-full flex items-center justify-center">
-                            <SecureVideoPlayer src={expandedProject.videoSrc} />
+                            <SecureVideoPlayer src={expandedProject.videoSrc} isContain={expandedProject.id === 'vid-10'} />
                         </div>
                     ) : (
                         <img src={expandedProject.img} alt={expandedProject.title} className="max-w-full max-h-full object-contain drop-shadow-2xl" />
