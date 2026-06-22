@@ -48,12 +48,15 @@ const projectData = {
   })),
   videos: [
     { id: "vid-1", title: "PRODUCTION REEL #1", videoSrc: "/vids/1.mp4", thumbnail: "/img/projects/video1.png", category: "Reel" },
-    { id: "vid-2", title: "PRODUCTION REEL #2", videoSrc: "/vids/2.mp4", thumbnail: "/img/projects/video2.png", category: "Reel" },
-    { id: "vid-3", title: "PRODUCTION REEL #3", videoSrc: "/vids/3.mp4", thumbnail: "/img/projects/video3.png", category: "Reel" },
-    { id: "vid-4", title: "PRODUCTION REEL #4", videoSrc: "/vids/4.mp4", thumbnail: "/img/projects/video4.png", category: "Reel" },
-    { id: "vid-5", title: "PRODUCTION REEL #5", videoSrc: "/vids/5.mp4", thumbnail: "/img/projects/video5.png", category: "Commercial" },
-    { id: "vid-6", title: "PRODUCTION REEL #6", videoSrc: "/vids/6.mp4", thumbnail: "/img/projects/video6.png", category: "Commercial" },
-    { id: "vid-7", title: "PRODUCTION REEL #7", videoSrc: "/vids/7.mp4", thumbnail: "/img/projects/video7.png", category: "Commercial" },
+    { id: "vid-2", title: "PRODUCTION REEL #2", videoSrc: "/vids/3.mp4", thumbnail: "/img/projects/video3.png", category: "Reel" },
+    { id: "vid-3", title: "PRODUCTION REEL #3", videoSrc: "/vids/4.mp4", thumbnail: "/img/projects/video4.png", category: "Reel" },
+    { id: "vid-4", title: "PRODUCTION REEL #4", videoSrc: "/vids/5.mp4", thumbnail: "/img/projects/video5.png", category: "Commercial" },
+    { id: "vid-5", title: "PRODUCTION REEL #5", videoSrc: "/vids/6.mp4", thumbnail: "/img/projects/video6.png", category: "Commercial" },
+    { id: "vid-6", title: "PRODUCTION REEL #6", videoSrc: "/vids/7.mp4", thumbnail: "/img/projects/video7.png", category: "Commercial" },
+    { id: "vid-7", title: "PRODUCTION REEL #7", videoSrc: "/vids/8.mp4", thumbnail: "", category: "Commercial" },
+    { id: "vid-8", title: "PRODUCTION REEL #8", videoSrc: "/vids/9.mp4", thumbnail: "", category: "Commercial" },
+    { id: "vid-9", title: "PRODUCTION REEL #9", videoSrc: "/vids/10.mp4", thumbnail: "", category: "Reel" },
+    { id: "vid-10", title: "PRODUCTION REEL #10", videoSrc: "/vids/11.mp4", thumbnail: "", category: "Reel" },
   ]
 };
 
