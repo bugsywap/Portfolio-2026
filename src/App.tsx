@@ -112,6 +112,9 @@ function App() {
     const handleWheel = (e: any) => {
       if (isTransitioning.current) return;
 
+      // Lock section navigation if we are inside a project category tab (showcase)
+      if (activeSection === 3 && selectedCategory !== null) return;
+
       const scrollContainer = (e.target as any).closest('.overflow-auto');
       if (scrollContainer) {
         const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
@@ -141,6 +144,9 @@ function App() {
 
     const handleTouchEnd = (e: any) => {
       if (isTransitioning.current) return;
+
+      // Lock section navigation if we are inside a project category tab (showcase)
+      if (activeSection === 3 && selectedCategory !== null) return;
       
       const touchEndY = e.changedTouches[0].clientY;
       const deltaY = touchStartY - touchEndY;
@@ -204,7 +210,7 @@ function App() {
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [activeSection, totalSections]);
+  }, [activeSection, totalSections, selectedCategory]);
 
   // Trigger internal CSS animations every time a new slide renders
   useEffect(() => {

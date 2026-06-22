@@ -155,6 +155,107 @@ const SecureVideoPlayer = ({ src, isContain = false }: { src: string; isContain?
   );
 };
 
+const DraggableScrollRow = ({ 
+  children, 
+  speed = 0.5 
+}: { 
+  children: React.ReactNode; 
+  speed?: number 
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isDown, setIsDown] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [draggedDistance, setDraggedDistance] = useState(0);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    
+    // If scrolling left, start from the middle so it doesn't wrap immediately
+    if (speed < 0 && container.scrollLeft === 0) {
+      container.scrollLeft = container.scrollWidth / 2;
+    }
+  }, [speed]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || isDown || isHovered) return;
+
+    let animationFrameId: number;
+    
+    const autoScroll = () => {
+      container.scrollLeft += speed;
+      if (speed > 0 && container.scrollLeft >= container.scrollWidth / 2) {
+        container.scrollLeft = 0;
+      } else if (speed < 0 && container.scrollLeft <= 0) {
+        container.scrollLeft = container.scrollWidth / 2;
+      }
+      animationFrameId = requestAnimationFrame(autoScroll);
+    };
+
+    animationFrameId = requestAnimationFrame(autoScroll);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isDown, isHovered, speed]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const container = containerRef.current;
+    if (!container) return;
+    setIsDown(true);
+    setStartX(e.pageX - container.offsetLeft);
+    setScrollLeftState(container.scrollLeft);
+    setDraggedDistance(0);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDown(false);
+    setIsHovered(false);
+  };
+
+  const handleMouseUp = () => {
+    setIsDown(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const container = containerRef.current;
+    if (!container) return;
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    container.scrollLeft = scrollLeftState - walk;
+    setDraggedDistance(Math.abs(x - startX));
+  };
+
+  const handleClickCapture = (e: React.MouseEvent) => {
+    if (draggedDistance > 5) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      onMouseDown={handleMouseDown}
+      onMouseLeave={handleMouseLeave}
+      onMouseUp={handleMouseUp}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onClickCapture={handleClickCapture}
+      className="flex overflow-x-auto scrollbar-none whitespace-nowrap border-y border-black/[0.03] py-8 hover:bg-zinc-50 transition-colors cursor-grab active:cursor-grabbing select-none"
+    >
+      <div className="flex gap-24 pr-24 items-center shrink-0">
+        {children}
+      </div>
+      <div className="flex gap-24 pr-24 items-center shrink-0" aria-hidden="true">
+        {children}
+      </div>
+    </div>
+  );
+};
+
 const ShowcaseHeader = ({ title, icon: Icon, onBack }: any) => (
   <div className="relative pt-20 pb-12 border-b border-black/5 mb-12 flex flex-col items-center text-center">
     <button 
@@ -208,29 +309,19 @@ const Projects = ({ selectedCategory, setSelectedCategory }: ProjectsProps) => {
             {/* Desktop: Triple-Row Scroller */}
             <div className="hidden lg:flex flex-col space-y-4">
               {[0, 1, 2].map((rowIdx) => {
-                // Randomize each row independently for a more dynamic feel
                 const shuffledRow = [...categoryLabels].sort(() => (rowIdx + 1) * Math.random() - 0.5);
+                // Custom speed for each row; row 1 scrolls backward, rows 0 & 2 scroll forward
+                const speed = rowIdx === 1 ? -0.8 : 0.8 + rowIdx * 0.2;
                 return (
-                  <div key={rowIdx} className="flex overflow-hidden whitespace-nowrap border-y border-black/[0.03] py-8 hover:bg-zinc-50 transition-colors">
-                    <motion.div 
-                      animate={{ x: rowIdx === 1 ? ["-50%", "0%"] : ["0%", "-50%"] }}
-                      transition={{ 
-                        duration: 60 + rowIdx * 5, // Standardized speed (slower and more consistent)
-                        repeat: Infinity, 
-                        ease: "linear" 
-                      }}
-                      className="flex gap-24 pr-24 items-center shrink-0"
-                    >
-                      {/* Using 2 repeats with -50% offset ensures a mathematically perfect seamless loop */}
-                      {[...shuffledRow, ...shuffledRow].map((cat, i) => (
-                        <div key={`${rowIdx}-${cat.id}-${i}`} onClick={() => setSelectedCategory(cat.id)} className="flex items-center gap-8 cursor-pointer group transition-transform hover:scale-105 font-['Outfit']">
-                          <cat.icon size={32} className="text-zinc-200 group-hover:text-purple-600 transition-colors" />
-                          <span className="text-[min(6vw,4.5rem)] font-black uppercase tracking-tighter group-hover:text-purple-600 transition-colors font-['Outfit']">{cat.label}</span>
-                          <div className="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all"><ArrowUpRight size={24} /></div>
-                        </div>
-                      ))}
-                    </motion.div>
-                  </div>
+                  <DraggableScrollRow key={rowIdx} speed={speed}>
+                    {shuffledRow.map((cat, i) => (
+                      <div key={`${rowIdx}-${cat.id}-${i}`} onClick={() => setSelectedCategory(cat.id)} className="flex items-center gap-8 cursor-pointer group transition-transform hover:scale-105 font-['Outfit']">
+                        <cat.icon size={32} className="text-zinc-200 group-hover:text-purple-600 transition-colors" />
+                        <span className="text-[min(6vw,4.5rem)] font-black uppercase tracking-tighter group-hover:text-purple-600 transition-colors font-['Outfit']">{cat.label}</span>
+                        <div className="w-12 h-12 rounded-2xl bg-zinc-100 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all"><ArrowUpRight size={24} /></div>
+                      </div>
+                    ))}
+                  </DraggableScrollRow>
                 );
               })}
             </div>
