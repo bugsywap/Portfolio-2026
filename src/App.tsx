@@ -108,6 +108,10 @@ function App() {
 
   useEffect(() => {
     let touchStartY = 0;
+    let touchStartedAtBottom = false;
+    let touchStartedAtTop = false;
+    let wheelAccumulator = 0;
+    let wheelTimer: any = null;
     
     const handleWheel = (e: any) => {
       if (isTransitioning.current) return;
@@ -118,19 +122,44 @@ function App() {
       const scrollContainer = (e.target as any).closest('.overflow-auto');
       if (scrollContainer) {
         const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
-        if (e.deltaY > 0 && Math.ceil(scrollTop + clientHeight) < scrollHeight - 2) return;
-        if (e.deltaY < 0 && scrollTop > 2) return;
-        if (Math.abs(e.deltaY) < 30) return; 
+        const isAtBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight - 4;
+        const isAtTop = scrollTop <= 4;
+
+        // While scrolling within container content, do not transition section
+        if (e.deltaY > 0 && !isAtBottom) {
+          wheelAccumulator = 0;
+          return;
+        }
+        if (e.deltaY < 0 && !isAtTop) {
+          wheelAccumulator = 0;
+          return;
+        }
+        if (Math.abs(e.deltaY) < 20) return; 
+
+        // At boundary of scroll container, accumulate delta so it doesn't slip immediately
+        wheelAccumulator += e.deltaY;
+        clearTimeout(wheelTimer);
+        wheelTimer = setTimeout(() => {
+          wheelAccumulator = 0;
+        }, 350);
+
+        // Substantial threshold for scrollable containers (especially Projects)
+        const requiredWheelDelta = activeSection === 3 ? 300 : 150;
+        if (Math.abs(wheelAccumulator) < requiredWheelDelta) {
+          return;
+        }
       }
 
       if (e.deltaY > 40) {
         if (activeSection < totalSections - 1) {
+          wheelAccumulator = 0;
           setDirection(1);
           isTransitioning.current = true;
           setActiveSection(prev => prev + 1);
         }
       } else if (e.deltaY < -40) {
         if (activeSection > 0) {
+          wheelAccumulator = 0;
           setDirection(-1);
           isTransitioning.current = true;
           setActiveSection(prev => prev - 1);
@@ -140,6 +169,16 @@ function App() {
 
     const handleTouchStart = (e: any) => {
       touchStartY = e.touches[0].clientY;
+      const scrollContainer = (e.target as any).closest('.overflow-auto');
+      if (scrollContainer) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
+        // Check if touch started while ALREADY at bottom or top
+        touchStartedAtBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight - 8;
+        touchStartedAtTop = scrollTop <= 8;
+      } else {
+        touchStartedAtBottom = true;
+        touchStartedAtTop = true;
+      }
     };
 
     const handleTouchEnd = (e: any) => {
@@ -151,18 +190,37 @@ function App() {
       const touchEndY = e.changedTouches[0].clientY;
       const deltaY = touchStartY - touchEndY;
 
-      // Check if we are on a mobile device (roughly)
-      const isMobile = window.innerWidth < 768;
-      const threshold = isMobile ? 100 : 50; // Higher threshold for mobile to avoid accidental swipes
-
-      // Ensure we're not inside an overflow container that's currently scrolling
+      const isMobile = window.innerWidth < 1024;
       const scrollContainer = (e.target as any).closest('.overflow-auto');
       if (scrollContainer) {
         const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
-        // If scrolling down, wait until we hit the bottom
-        if (deltaY > 0 && Math.ceil(scrollTop + clientHeight) < scrollHeight - 2) return;
-        // If scrolling up, wait until we hit the top
-        if (deltaY < 0 && scrollTop > 2) return;
+        const isCurrentlyAtBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight - 4;
+        const isCurrentlyAtTop = scrollTop <= 4;
+
+        // If swiping up (attempting to go to next section):
+        if (deltaY > 0) {
+          if (!isCurrentlyAtBottom) return;
+          // CRITICAL: If the touch didn't START while already at the bottom,
+          // the swipe was used to scroll down through the list. Never slip to Contact!
+          if (!touchStartedAtBottom) return;
+        }
+
+        // If swiping down (attempting to go to previous section):
+        if (deltaY < 0) {
+          if (!isCurrentlyAtTop) return;
+          // CRITICAL: If the touch didn't START while already at the top,
+          // the swipe was used to scroll up through the list. Never slip to previous section!
+          if (!touchStartedAtTop) return;
+        }
+      }
+
+      // Strong threshold for mobile/tablet, and extra high threshold when leaving Projects (section 3)
+      let threshold = isMobile ? 100 : 50;
+      if (activeSection === 3) {
+        // High threshold specifically requested so contact page won't slip in easily
+        threshold = isMobile ? 180 : 120;
+      } else if (scrollContainer) {
+        threshold = isMobile ? 140 : 80;
       }
 
       if (Math.abs(deltaY) > threshold) {

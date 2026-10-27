@@ -57,16 +57,20 @@ const projectData = {
     { id: "vid-8", title: "PRODUCTION REEL #8", videoSrc: "/vids/9.mp4", thumbnail: "", category: "Commercial" },
     { id: "vid-9", title: "PRODUCTION REEL #9", videoSrc: "/vids/10.mp4", thumbnail: "", category: "Reel" },
     { id: "vid-10", title: "PRODUCTION REEL #10", videoSrc: "/vids/11.mp4", thumbnail: "", category: "Reel" },
+    { id: "vid-11", title: "PRODUCTION REEL #11", videoSrc: "/vids/12.mp4", thumbnail: "", category: "Reel" },
+    { id: "vid-12", title: "PRODUCTION REEL #12", videoSrc: "/vids/13.mp4", thumbnail: "", category: "Reel" },
+    { id: "vid-13", title: "PRODUCTION REEL #13", videoSrc: "/vids/14.mp4", thumbnail: "", category: "Reel" },
+    { id: "vid-14", title: "PRODUCTION REEL #14", videoSrc: "/vids/15.mp4", thumbnail: "", category: "Reel" },
   ]
 };
 
 const categoryLabels = [
-  { id: 'websites', label: 'WEBSITE DEVELOPMENT', icon: Globe },
-  { id: 'logos', label: 'BRANDING SYSTEMS', icon: Palette },
-  { id: 'aiGens', label: 'AI CREATIVE GENS', icon: Sparkles },
-  { id: 'mascots', label: 'MASCOTS & CHARACTER', icon: ImageIcon },
-  { id: 'flyers', label: 'FLYER DESIGN', icon: ImageIcon },
-  { id: 'videos', label: 'VIDEO PRODUCTION', icon: Video },
+  { id: 'websites', label: 'WEBSITE DEVELOPMENT', icon: Globe, tag: 'Web Dev & Systems', desc: 'Custom web solutions, UI/UX & digital architecture' },
+  { id: 'logos', label: 'BRANDING SYSTEMS', icon: Palette, tag: 'Visual Identity', desc: 'Logos, branding marks & identity systems' },
+  { id: 'videos', label: 'VIDEO PRODUCTION', icon: Video, tag: 'Commercial & Reels', desc: 'Short-form reels, commercial cuts & motion' },
+  { id: 'aiGens', label: 'AI CREATIVE GENS', icon: Sparkles, tag: 'Generative Art', desc: 'Experimental visual AI prompts & concept art' },
+  { id: 'mascots', label: 'MASCOTS & CHARACTER', icon: ImageIcon, tag: 'Character Design', desc: 'Playful character illustrations & branded mascots' },
+  { id: 'flyers', label: 'FLYER DESIGN', icon: ImageIcon, tag: 'Print & Promo', desc: 'Commercial marketing layouts & promotional flyers' },
 ];
 
 // --- COMPONENTS ---
@@ -257,18 +261,20 @@ const DraggableScrollRow = ({
 };
 
 const ShowcaseHeader = ({ title, icon: Icon, onBack }: any) => (
-  <div className="relative pt-20 pb-12 border-b border-black/5 mb-12 flex flex-col items-center text-center">
-    <button 
-      onClick={onBack}
-      className="absolute top-20 left-0 px-6 py-2 bg-zinc-50 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-black hover:text-white transition-all shadow-sm"
-    >
-      <ArrowLeft size={14} /> Back
-    </button>
-    <div className="space-y-4">
-      <div className="inline-flex items-center gap-2 px-4 py-1 bg-purple-100 text-purple-600 rounded-full text-[10px] font-black uppercase tracking-widest font-['Outfit']">
+  <div className="relative pt-6 sm:pt-12 pb-6 sm:pb-10 border-b border-black/5 mb-8 sm:mb-12 flex flex-col items-center text-center">
+    <div className="w-full flex items-center justify-between mb-4">
+      <button 
+        onClick={onBack}
+        className="px-4 py-2 bg-zinc-100 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-black hover:text-white transition-all shadow-sm active:scale-95"
+      >
+        <ArrowLeft size={14} /> Back
+      </button>
+      <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-purple-100 text-purple-600 rounded-full text-[10px] font-black uppercase tracking-widest font-['Outfit']">
         <Icon size={12} /> {title}
       </div>
-      <h3 className="text-5xl font-black tracking-tighter uppercase leading-none font-['Outfit']">Project Archive</h3>
+    </div>
+    <div className="space-y-2">
+      <h3 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase leading-none font-['Outfit']">Project Archive</h3>
       <p className="text-[10px] font-black tracking-[0.4em] text-zinc-400 uppercase italic">Digital Excellence &bull; 2024</p>
     </div>
   </div>
@@ -289,7 +295,7 @@ const Projects = ({ selectedCategory, setSelectedCategory }: ProjectsProps) => {
   }, []);
 
   return (
-    <div className="w-full h-full font-['Outfit'] pt-16 lg:pt-24">
+    <div className="w-full min-h-full font-['Outfit'] pt-4 sm:pt-8 lg:pt-16">
       <AnimatePresence mode="wait">
         {!selectedCategory ? (
           <motion.div 
@@ -297,11 +303,11 @@ const Projects = ({ selectedCategory, setSelectedCategory }: ProjectsProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, y: -20 }}
-            className="w-full h-full flex flex-col justify-center"
+            className="w-full min-h-full lg:h-full flex flex-col justify-start lg:justify-center"
           >
-            <div className="px-12 md:px-24 mb-16 text-center md:text-left">
-              <span className="inline-block px-4 py-1 bg-black text-white text-[10px] font-black uppercase tracking-widest mb-6 rounded-full font-['Outfit']">Studio Archive</span>
-              <h2 className="text-[min(8vw,5.5rem)] font-black tracking-tighter uppercase leading-[0.85] font-['Outfit']">
+            <div className="px-6 sm:px-12 md:px-24 mb-6 sm:mb-10 lg:mb-16 text-center md:text-left">
+              <span className="inline-block px-4 py-1 bg-black text-white text-[10px] font-black uppercase tracking-widest mb-3 sm:mb-6 rounded-full font-['Outfit']">Studio Archive</span>
+              <h2 className="text-[clamp(2.2rem,7vw,5.5rem)] font-black tracking-tighter uppercase leading-[0.9] font-['Outfit']">
                 Creative <span className="text-zinc-300 italic">Portfolio</span>
               </h2>
             </div>
@@ -326,32 +332,67 @@ const Projects = ({ selectedCategory, setSelectedCategory }: ProjectsProps) => {
               })}
             </div>
 
-            {/* Mobile/Tablet: Massive Vertical Brutalist Menu */}
-            <div className="lg:hidden flex flex-col w-full px-6 space-y-4">
-              {categoryLabels.map((cat, i) => (
-                <motion.div
-                  key={cat.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className="group relative flex flex-col border-b-2 border-black/5 pb-4 last:border-0"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[clamp(1.8rem,10vw,4rem)] font-black uppercase tracking-tighter leading-none transition-colors group-active:text-purple-600">
-                      {cat.label.split(' ')[0]}
-                      <span className="text-purple-600/20 group-hover:text-purple-600 transition-colors">.</span>
-                    </span>
-                    <div className="w-10 h-10 rounded-full border-2 border-black flex items-center justify-center group-active:bg-black group-active:text-white transition-all">
-                      <ArrowUpRight size={20} />
+            {/* Mobile/Tablet: Clean Branded Scrolling Normal List */}
+            <div className="lg:hidden flex flex-col w-full px-5 sm:px-10 space-y-3 pb-28">
+              <div className="flex items-center justify-between px-1 mb-1">
+                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-zinc-400">
+                  Disciplines & Projects
+                </span>
+                <span className="text-[10px] font-bold text-zinc-400">
+                  {categoryLabels.length} Categories
+                </span>
+              </div>
+
+              {categoryLabels.map((cat, i) => {
+                const count = (projectData as any)[cat.id]?.length || 0;
+                return (
+                  <motion.div
+                    key={cat.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04, duration: 0.3 }}
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className="group relative flex items-center justify-between p-4 sm:p-5 bg-zinc-50 hover:bg-zinc-100 active:bg-zinc-200/70 border border-black/5 hover:border-purple-600/30 rounded-2xl transition-all duration-200 cursor-pointer shadow-sm active:scale-[0.99]"
+                  >
+                    <div className="flex items-center gap-4 sm:gap-5 min-w-0 pr-3">
+                      <div className="w-12 h-12 rounded-xl bg-white border border-black/5 flex items-center justify-center text-purple-600 shadow-sm shrink-0 group-hover:scale-105 group-hover:bg-purple-600 group-hover:text-white transition-all">
+                        <cat.icon size={22} />
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 text-[9px] font-black uppercase tracking-wider">
+                            {cat.tag}
+                          </span>
+                          <span className="text-[10px] font-bold text-zinc-400 tracking-wider">
+                            {count} {cat.id === 'videos' ? 'Reels' : cat.id === 'websites' ? 'Sites' : 'Items'}
+                          </span>
+                        </div>
+                        <h3 className="text-base sm:text-lg font-black uppercase tracking-tight text-black group-hover:text-purple-600 transition-colors leading-snug truncate">
+                          {cat.label}
+                        </h3>
+                        <p className="text-[11px] font-medium text-zinc-500 line-clamp-1 hidden sm:block mt-0.5">
+                          {cat.desc}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3 mt-1">
-                    <cat.icon size={12} className="text-zinc-400" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">View Archive</span>
-                  </div>
-                </motion.div>
-              ))}
+                    
+                    <div className="w-9 h-9 rounded-full bg-white border border-black/5 flex items-center justify-center text-zinc-400 group-hover:text-white group-hover:bg-black transition-all shrink-0 shadow-sm">
+                      <ArrowUpRight size={18} />
+                    </div>
+                  </motion.div>
+                );
+              })}
+
+              {/* End of list boundary / subtle indicator */}
+              <div className="pt-10 pb-6 flex flex-col items-center text-center opacity-60">
+                <div className="w-12 h-0.5 bg-black/10 rounded-full mb-3" />
+                <span className="text-[9px] font-black tracking-[0.3em] uppercase text-zinc-400">
+                  End of Projects Archive
+                </span>
+                <span className="text-[9px] text-zinc-400 mt-1">
+                  Pull up firmly to view Contact
+                </span>
+              </div>
             </div>
           </motion.div>
         ) : (
@@ -444,10 +485,10 @@ const Projects = ({ selectedCategory, setSelectedCategory }: ProjectsProps) => {
         {expandedProject && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} 
-            className="fixed inset-0 z-[400] bg-white/95 backdrop-blur-xl flex items-center justify-center p-6 md:p-12 overflow-hidden"
+            className="fixed inset-0 z-[400] bg-white/95 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 md:p-12 overflow-hidden"
             onClick={() => setExpandedProject(null)}
           >
-            <button className="absolute top-10 right-10 p-4 bg-black text-white rounded-full z-[500] hover:rotate-90 transition-transform"><X size={24} /></button>
+            <button className="absolute top-6 right-6 sm:top-10 sm:right-10 p-3 sm:p-4 bg-black text-white rounded-full z-[500] hover:rotate-90 transition-transform shadow-lg"><X size={20} className="sm:w-6 sm:h-6" /></button>
             <div className="max-w-[1600px] w-full h-full flex flex-col lg:flex-row items-center gap-12 lg:gap-24" onClick={e => e.stopPropagation()}>
                 <div className="flex-1 w-full h-full relative flex items-center justify-center">
                     {/* Expansion Watermark (Centered & Large) */}
